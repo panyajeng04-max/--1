@@ -5,8 +5,8 @@
   <title>โปรแกรมคำนวณปริมาณน้ำที่ควรดื่ม</title>
   <style>
     body {
-      font-family: "Prompt", Tahoma, sans-serif;
-      background: linear-gradient(135deg, #d4fc79, #96e6a1);
+      font-family: "Prompt", sans-serif;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -14,63 +14,47 @@
       margin: 0;
     }
 
-    .container {
+    .card {
       background: #ffffffdd;
-      border-radius: 20px;
       padding: 30px;
+      border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      text-align: center;
       width: 400px;
+      text-align: center;
       backdrop-filter: blur(10px);
     }
 
-    .icon {
-      font-size: 60px;
-      margin-bottom: 15px;
-      color: #0077b6;
-      animation: float 2s infinite ease-in-out;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
-    }
-
     h1 {
-      color: #004466;
+      color: #0652dd;
       margin-bottom: 20px;
     }
 
-    label {
-      display: block;
-      margin: 10px 0 5px;
-      text-align: left;
-      font-weight: bold;
+    p {
+      font-size: 16px;
       color: #333;
     }
 
-    input, select {
-      width: 100%;
+    input {
+      font-size: 18px;
       padding: 12px;
+      margin: 10px 0;
       border-radius: 12px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      margin-bottom: 15px;
+      border: 1px solid #74b9ff;
+      width: 100%;
       box-sizing: border-box;
       transition: 0.2s;
     }
 
-    input:focus, select:focus {
-      border-color: #00b4d8;
+    input:focus {
       outline: none;
-      box-shadow: 0 0 6px #90e0ef;
+      border-color: #0984e3;
+      box-shadow: 0 0 6px #74b9ff;
     }
 
     button {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #00b4d8, #48cae4);
+      background: linear-gradient(135deg, #0984e3, #74b9ff);
       border: none;
       border-radius: 12px;
       color: #fff;
@@ -80,75 +64,44 @@
     }
 
     button:hover {
-      background: linear-gradient(135deg, #0096c7, #00b4d8);
+      background: linear-gradient(135deg, #74b9ff, #0984e3);
       transform: scale(1.02);
     }
 
-    .result-card {
-      margin-top: 25px;
-      background: #f0f9ff;
-      border-radius: 15px;
-      padding: 20px;
-      font-size: 18px;
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
       font-weight: bold;
-      color: #005f73;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      color: #2d3436;
+      padding: 15px;
+      border-radius: 12px;
+      background: #f1f9ff;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="icon">💧</div>
-    <h1>คำนวณปริมาณน้ำที่ควรดื่ม</h1>
-
-    <label for="weight">น้ำหนัก (กิโลกรัม)</label>
+  <div class="card">
+    <h1>💧 โปรแกรมคำนวณน้ำที่ควรดื่ม</h1>
+    <p>ใส่น้ำหนักตัว (กิโลกรัม):</p>
     <input type="number" id="weight" placeholder="เช่น 60">
-
-    <label for="activity">เวลาออกกำลังกาย (นาที)</label>
-    <input type="number" id="activity" placeholder="เช่น 30">
-
-    <label for="climate">สภาพอากาศ</label>
-    <select id="climate">
-      <option value="normal">ปกติ</option>
-      <option value="hot">ร้อน</option>
-      <option value="cold">หนาว</option>
-    </select>
-
-    <button onclick="calculateWater()">💧 คำนวณเลย</button>
-
-    <div class="result-card" id="result"></div>
+    <button onclick="calculateWater()">คำนวณ</button>
+    <div id="result"></div>
   </div>
 
   <script>
     function calculateWater() {
-      const weight = parseFloat(document.getElementById('weight').value);
-      const activity = parseInt(document.getElementById('activity').value) || 0;
-      const climate = document.getElementById('climate').value;
+      const weight = document.getElementById("weight").value;
+      const resultDiv = document.getElementById("result");
 
-      if (!weight || weight <= 0) {
-        alert("กรุณากรอกน้ำหนักที่ถูกต้อง");
-        return;
+      if (weight > 0) {
+        const minWater = weight * 30; // ml
+        const maxWater = weight * 35; // ml
+        resultDiv.innerHTML = 
+          `คุณควรดื่มน้ำประมาณ <br><span style="color:#0652dd; font-size:22px;">${(minWater/1000).toFixed(2)} – ${(maxWater/1000).toFixed(2)} ลิตร</span> ต่อวัน 💧`;
+      } else {
+        resultDiv.innerHTML = "⚠️ กรุณากรอกน้ำหนักที่ถูกต้อง";
       }
-
-      // คำนวณ
-      let baseMl = weight * 35;
-      const activityBlocks = Math.floor(activity / 30);
-      const activityMultiplier = 1 + (activityBlocks * 0.12);
-
-      let climateMultiplier = 1;
-      if (climate === "hot") climateMultiplier = 1.15;
-
-      let resultMl = baseMl * activityMultiplier * climateMultiplier;
-      resultMl = Math.round(resultMl / 10) * 10;
-
-      document.getElementById("result").innerHTML = 
-        `คุณควรดื่มน้ำประมาณ <br><span style="font-size:22px;color:#0077b6;">${resultMl} ml</span> <br>หรือ <span style="font-size:22px;color:#0096c7;">${(resultMl/1000).toFixed(2)} ลิตร</span> ต่อวัน 💧`;
     }
   </script>
 </body>
