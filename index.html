@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>โปรแกรมคำนวณปริมาณน้ำที่ควรดื่ม</title>
+  <style>
+    body {
+      font-family: "Prompt", Tahoma, sans-serif;
+      background: linear-gradient(135deg, #d4fc79, #96e6a1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #ffffffdd;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 400px;
+      backdrop-filter: blur(10px);
+    }
+
+    .icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+      color: #0077b6;
+      animation: float 2s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    h1 {
+      color: #004466;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      text-align: left;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      transition: 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #00b4d8;
+      outline: none;
+      box-shadow: 0 0 6px #90e0ef;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00b4d8, #48cae4);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #0096c7, #00b4d8);
+      transform: scale(1.02);
+    }
+
+    .result-card {
+      margin-top: 25px;
+      background: #f0f9ff;
+      border-radius: 15px;
+      padding: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #005f73;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">💧</div>
+    <h1>คำนวณปริมาณน้ำที่ควรดื่ม</h1>
+
+    <label for="weight">น้ำหนัก (กิโลกรัม)</label>
+    <input type="number" id="weight" placeholder="เช่น 60">
+
+    <label for="activity">เวลาออกกำลังกาย (นาที)</label>
+    <input type="number" id="activity" placeholder="เช่น 30">
+
+    <label for="climate">สภาพอากาศ</label>
+    <select id="climate">
+      <option value="normal">ปกติ</option>
+      <option value="hot">ร้อน</option>
+      <option value="cold">หนาว</option>
+    </select>
+
+    <button onclick="calculateWater()">💧 คำนวณเลย</button>
+
+    <div class="result-card" id="result"></div>
+  </div>
+
+  <script>
+    function calculateWater() {
+      const weight = parseFloat(document.getElementById('weight').value);
+      const activity = parseInt(document.getElementById('activity').value) || 0;
+      const climate = document.getElementById('climate').value;
+
+      if (!weight || weight <= 0) {
+        alert("กรุณากรอกน้ำหนักที่ถูกต้อง");
+        return;
+      }
+
+      // คำนวณ
+      let baseMl = weight * 35;
+      const activityBlocks = Math.floor(activity / 30);
+      const activityMultiplier = 1 + (activityBlocks * 0.12);
+
+      let climateMultiplier = 1;
+      if (climate === "hot") climateMultiplier = 1.15;
+
+      let resultMl = baseMl * activityMultiplier * climateMultiplier;
+      resultMl = Math.round(resultMl / 10) * 10;
+
+      document.getElementById("result").innerHTML = 
+        `คุณควรดื่มน้ำประมาณ <br><span style="font-size:22px;color:#0077b6;">${resultMl} ml</span> <br>หรือ <span style="font-size:22px;color:#0096c7;">${(resultMl/1000).toFixed(2)} ลิตร</span> ต่อวัน 💧`;
+    }
+  </script>
+</body>
+</html>
